@@ -1,6 +1,7 @@
 package com.soumen.kalpavriksha.Repository;
 
 import com.soumen.kalpavriksha.Entity.RefreshToken;
+import com.soumen.kalpavriksha.Entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,4 +20,6 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Inte
           "DELETE FROM RefreshToken t WHERE t.token = ?1"
   )
   void deleteByToken(String refreshToken);
+
+    Optional<RefreshToken> findByUser(User user);
 }

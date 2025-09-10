@@ -313,6 +313,19 @@ public class AuthService
 
                 System.out.println("refresh token : " + refreshToken);
 
+                Optional<RefreshToken> refreshTokenOptional = refreshTokenRepo.findByUser(user);
+
+                if(refreshTokenOptional.isPresent())
+                {
+                    RefreshToken refreshTokenData = refreshTokenOptional.get();
+                    refreshTokenData.setToken(refreshToken);
+                    refreshTokenData.setCreatedAt(LocalDateTime.now());
+                    refreshTokenData.setExpiresAt(LocalDateTime.now().plusDays(15));
+
+                    refreshTokenRepo.save(refreshTokenData);
+                }
+
+
                 RefreshToken refreshTokenObject = new RefreshToken();
 
                 refreshTokenObject.setToken(refreshToken);
