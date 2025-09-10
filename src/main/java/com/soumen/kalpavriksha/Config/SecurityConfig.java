@@ -29,9 +29,6 @@ public class SecurityConfig
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
-    @Autowired
-    private JwtFilter jwtFilter;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception
     {
@@ -87,7 +84,11 @@ public class SecurityConfig
     public CorsConfigurationSource corsConfiguration()
     {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("https://kalpavriksha-smart-garden-assitance.vercel.app","https://kalpavriksha.onrender.com","http://localhost:5173", "http://localhost:8080"));
+        corsConfiguration.setAllowedOrigins(List.of(
+                "https://kalpavriksha-smart-garden-assitance.vercel.app",
+                "https://kalpavriksha.onrender.com",
+                "http://localhost:5173",
+                "http://localhost:8080"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setAllowCredentials(true);
