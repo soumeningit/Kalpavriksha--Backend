@@ -89,7 +89,7 @@ public class AuthController
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String , Object>> loginController(@RequestBody AuthRequest request, HttpServletResponse response)
+    public ResponseEntity<Map<String , Object>> loginController(@RequestBody AuthRequest request, HttpServletResponse httpServletResponse)
     {
         System.out.println("Inside log in controller");
         String email = request.getEmail();
@@ -131,12 +131,13 @@ public class AuthController
         // Set cookie with token
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
-                .secure(true)
+                .secure(true) // set true in production (HTTPS)
                 .path("/api/v1/auth")
                 .maxAge(15 * 24 * 60 * 60)
+                .sameSite("None")
                 .build();
 
-        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
         Map<String , Object> data = new HashMap<>();
         data.put("token", resp.get("token"));
