@@ -126,7 +126,7 @@ public class AuthController
 
         String refreshToken = resp.get("refreshToken").toString();
 
-        System.out.println("token : " + refreshToken);
+        System.out.println("refreshToken inside log in controller : " + refreshToken);
 
         // Set cookie with token
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
