@@ -158,7 +158,6 @@ public class AuthController
                 .sameSite("None")
                 .path("/")
                 .maxAge(Duration.ofDays(7))
-                .domain("kalpavriksha-smart-garden-assitance.vercel.app")
                 .build();
 
         httpServletResponse.addHeader("Set-Cookie", cookie.toString());
