@@ -134,7 +134,6 @@ public class AuthController
                 .secure(true)
                 .path("/api/v1/auth")
                 .maxAge(15 * 24 * 60 * 60)
-                .sameSite("None")
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());

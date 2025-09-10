@@ -1,9 +1,13 @@
 package com.soumen.kalpavriksha.Service;
 
+import com.soumen.kalpavriksha.Auth.JwtService;
+import com.soumen.kalpavriksha.Auth.Payload;
 import com.soumen.kalpavriksha.Entity.OAuth2User;
+import com.soumen.kalpavriksha.Entity.RefreshToken;
 import com.soumen.kalpavriksha.Entity.User;
 import com.soumen.kalpavriksha.Models.GoogleUser;
 import com.soumen.kalpavriksha.Repository.OAuth2UserRepository;
+import com.soumen.kalpavriksha.Repository.RefreshTokenRepository;
 import com.soumen.kalpavriksha.Repository.UserRepository;
 import com.soumen.kalpavriksha.Utills.Response;
 import jakarta.transaction.Transactional;
@@ -19,6 +23,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -39,6 +44,9 @@ public class OAuth2Service
     
     @Autowired
     private OAuth2UserRepository oAuth2UserRepo;
+
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepo;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -137,4 +145,71 @@ public class OAuth2Service
         }
 
     }
+
+    public Map<String , Object> oAuth2LoginUser(User user)
+    {
+        try{
+            String userEmail = user.getEmail();
+            int id = user.getId();
+            String role = user.getRole().toString();
+            String userId = Integer.toString(id);
+            String userName = user.getName();
+
+            System.out.println("userEmail inside OAuth2Controller : " + userEmail);
+            System.out.println("id inside OAuth2Controller : " + id);
+            System.out.println("role inside OAuth2Controller : " + role);
+            System.out.println("userId inside OAuth2Controller : " + userId);
+            System.out.println("userName inside OAuth2Controller : " + userName);
+
+            Payload payload = new Payload();
+            payload.setUserId(String.valueOf(id));
+            payload.setRole(role);
+            payload.setEmail(userEmail);
+
+            long EXPIRATION_TIME = 1000 * 60 * 2;
+            long REFRESH_TOKEN_EXPIRATION_TIME = 15 * 24 * 60 * 60 * 1000;
+
+            String token = new JwtService().generateAccessToken(payload, EXPIRATION_TIME);
+
+            System.out.println("generated token : " + token);
+
+            String refreshToken = new JwtService().createRefreshToken(payload, REFRESH_TOKEN_EXPIRATION_TIME);
+
+            System.out.println("refresh token : " + refreshToken);
+
+            Map<String , Object> tokenData = new HashMap<>();
+
+            tokenData.put("token", token);
+            tokenData.put("refreshToken", refreshToken);
+            tokenData.put("userId", Integer.toString(user.getId()));
+            tokenData.put("name", user.getName());
+            tokenData.put("email", user.getEmail());
+
+            Optional<RefreshToken> refreshTokenOptional= refreshTokenRepo.findByUser(user);
+
+            if(refreshTokenOptional.isPresent())
+            {
+                RefreshToken object = refreshTokenOptional.get();
+                object.setToken(refreshToken);
+                object.setExpiresAt(LocalDateTime.now().plusDays(15));
+                refreshTokenRepo.save(object);
+
+                return Response.success("Success", tokenData);
+            }
+
+            RefreshToken refreshTokenObject = new RefreshToken();
+
+            refreshTokenObject.setToken(refreshToken);
+            refreshTokenObject.setUser(user);
+            refreshTokenObject.setCreatedAt(LocalDateTime.now());
+            refreshTokenObject.setExpiresAt(LocalDateTime.now().plusDays(15));
+
+            refreshTokenRepo.save(refreshTokenObject);
+
+            return Response.success("Success", tokenData);
+        } catch (Exception e) {
+            return Response.error(e.getMessage());
+        }
+    }
+
 }

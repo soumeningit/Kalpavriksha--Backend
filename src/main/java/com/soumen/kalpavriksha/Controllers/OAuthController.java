@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -88,42 +89,21 @@ public class OAuthController
 
         System.out.println("userFromDB inside OAuth2Controller : " + userFromDB);
 
-        String userEmail = userFromDB.getEmail();
-        int id = userFromDB.getId();
-        String role = userFromDB.getRole().toString();
-        String userId = Integer.toString(id);
-        String userName = userFromDB.getName();
+        response = service.oAuth2LoginUser(userFromDB);
 
-        System.out.println("userEmail inside OAuth2Controller : " + userEmail);
-        System.out.println("id inside OAuth2Controller : " + id);
-        System.out.println("role inside OAuth2Controller : " + role);
-        System.out.println("userId inside OAuth2Controller : " + userId);
-        System.out.println("userName inside OAuth2Controller : " + userName);
+        System.out.println("response after login inside OAuth2Controller : " + response.get("data"));
 
-        Payload payload = new Payload();
-        payload.setUserId(String.valueOf(id));
-        payload.setRole(role);
-        payload.setEmail(userEmail);
+        Map<String , Object> tokenData = (Map<String , Object>) response.get("data");
 
-        long EXPIRATION_TIME = 1000 * 60 * 2;
-        long REFRESH_TOKEN_EXPIRATION_TIME = 15 * 24 * 60 * 60 * 1000;
+        String token = tokenData.get("token").toString();
+        String refreshToken = tokenData.get("refreshToken").toString();
+        String userId = tokenData.get("userId").toString();
+        String userName = tokenData.get("userName").toString();
 
-        String token = new JwtService().generateAccessToken(payload, EXPIRATION_TIME);
-
-        System.out.println("generated token : " + token);
-
-        String refreshToken = new JwtService().createRefreshToken(payload, REFRESH_TOKEN_EXPIRATION_TIME);
-
-        System.out.println("refresh token : " + refreshToken);
-
-        RefreshToken refreshTokenObject = new RefreshToken();
-
-        refreshTokenObject.setToken(refreshToken);
-        refreshTokenObject.setUser(userFromDB);
-        refreshTokenObject.setCreatedAt(LocalDateTime.now());
-        refreshTokenObject.setExpiresAt(LocalDateTime.now().plusDays(15));
-
-        refreshTokenRepo.save(refreshTokenObject);
+        System.out.println("token inside OAuth2Controller after login : " + token);
+        System.out.println("refreshToken inside OAuth2Controller after login : " + refreshToken);
+        System.out.println("userId inside OAuth2Controller after login : " + userId);
+        System.out.println("userName inside OAuth2Controller after login : " + userName);
 
         // Set cookie with token
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
