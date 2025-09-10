@@ -38,10 +38,6 @@ public class JwtFilter extends OncePerRequestFilter
 
         System.out.println("request.getRequestURI() : " + request.getRequestURI());
 
-        Cookie cookie = WebUtils.getCookie(request, "refreshToken");
-
-        System.out.println("cookie inside jwt filter : " + cookie.getValue());
-
         if((request.getRequestURI().contains("/login")
                 || request.getRequestURI().contains("/register")
                 || request.getRequestURI().contains("/refresh")
