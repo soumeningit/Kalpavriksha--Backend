@@ -278,16 +278,8 @@ public class AuthService
                     new UsernamePasswordAuthenticationToken(userId, rawPassword)
             );
 
-            System.out.println("authentication : " + authentication);
+            // UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-            System.out.println("authentication.isAuthenticated() : " + authentication.isAuthenticated());
-
-            System.out.println("authentication.getPrincipal() : " + authentication.getPrincipal());
-
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-            System.out.println("userDetails : " + userDetails);
-            System.out.println("userDetails.getName() : " + userDetails.getPassword());
 
             if (authentication.isAuthenticated()) {
 
