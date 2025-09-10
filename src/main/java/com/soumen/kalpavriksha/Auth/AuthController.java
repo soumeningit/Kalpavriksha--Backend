@@ -17,7 +17,9 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -140,14 +142,26 @@ public class AuthController
 //
 //        httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(true);
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60);
-        refreshTokenCookie.setAttribute("SameSite", "None");
-        httpServletResponse.addCookie(refreshTokenCookie);
+//        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+//        refreshTokenCookie.setHttpOnly(true);
+//        refreshTokenCookie.setSecure(true);
+//        refreshTokenCookie.setPath("/");
+//        refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60);
+//        refreshTokenCookie.setAttribute("SameSite", "None");
+//        refreshTokenCookie.setDomain("kalpavriksha-smart-garden-assitance.vercel.app");
+//        httpServletResponse.addCookie(refreshTokenCookie);
 
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(Duration.ofDays(7))
+                .domain("kalpavriksha-smart-garden-assitance.vercel.app")
+                .build();
+
+        httpServletResponse.addHeader("Set-Cookie", cookie.toString());
 
         Map<String , Object> data = new HashMap<>();
         data.put("token", resp.get("token"));
@@ -368,6 +382,14 @@ public class AuthController
     @GetMapping("/check-cookie")
     public String checkCookie(HttpServletRequest request, HttpServletResponse respons)
     {
+        // Print all request headers
+        System.out.println("Request Headers:");
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            String headerValue = request.getHeader(headerName);
+            System.out.println(headerName + ": " + headerValue);
+        }
         String refreshToken = null;
         Cookie[] cookies = request.getCookies();
         if (cookies != null)
