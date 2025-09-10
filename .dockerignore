@@ -1,0 +1,30 @@
+# Maven build directories
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Docker related
+Dockerfile
+docker-compose.yml
+
+# Node/npm (if frontend is present inside same repo)
+node_modules/
+dist/
