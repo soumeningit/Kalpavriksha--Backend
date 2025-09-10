@@ -132,7 +132,7 @@ public class AuthController
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(true) // set true in production (HTTPS)
-                .path("/api/v1/auth")
+                .path("/")
                 .maxAge(15 * 24 * 60 * 60)
                 .sameSite("None")
                 .build();
@@ -210,7 +210,7 @@ public class AuthController
         ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
                 .secure(true)
-                .path("/api/v1/auth")
+                .path("/")
                 .maxAge(0)
                 .build();
 
