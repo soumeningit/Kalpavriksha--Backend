@@ -80,6 +80,7 @@ public class SecurityConfig
         return http.build();
     }
 
+    /*
     @Bean
     public CorsConfigurationSource corsConfiguration()
     {
@@ -97,6 +98,28 @@ public class SecurityConfig
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
     }
+
+     */
+
+    @Bean
+    public CorsConfigurationSource corsConfiguration() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedOrigins(List.of(
+                "https://kalpavriksha-smart-garden-assitance.vercel.app",
+                "https://kalpavriksha.onrender.com",
+                "http://localhost:5173",
+                "http://localhost:8080"
+        ));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Cookie"));
+        corsConfiguration.setExposedHeaders(List.of("Set-Cookie"));
+        corsConfiguration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
+    }
+
 
     @Bean
     public PasswordEncoder passwordEncoder()

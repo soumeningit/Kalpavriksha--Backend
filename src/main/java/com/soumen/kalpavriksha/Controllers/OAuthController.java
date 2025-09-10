@@ -111,7 +111,7 @@ public class OAuthController
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(true)
-                .path("/api/v1/auth")
+                .path("/")
                 .maxAge(15 * 24 * 60 * 60)
                 .sameSite("None")
                 .build();

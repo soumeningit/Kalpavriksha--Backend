@@ -295,6 +295,7 @@ public class AuthController
     @GetMapping("/check-cookie")
     public String checkCookie(@CookieValue(value = "refreshToken", required = false) String refreshToken)
     {
+        System.out.println("Cookie inside check cookie : " + refreshToken);
         return "Cookie: " + refreshToken;
     }
 
