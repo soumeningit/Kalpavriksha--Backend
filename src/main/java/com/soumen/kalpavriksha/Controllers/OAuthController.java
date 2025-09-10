@@ -95,10 +95,12 @@ public class OAuthController
 
         Map<String , Object> tokenData = (Map<String , Object>) response.get("data");
 
+        System.out.println("tokenData inside OAuth2Controller : " + tokenData);
+
         String token = tokenData.get("token").toString();
         String refreshToken = tokenData.get("refreshToken").toString();
         String userId = tokenData.get("userId").toString();
-        String userName = tokenData.get("userName").toString();
+        String userName = tokenData.get("name").toString();
 
         System.out.println("token inside OAuth2Controller after login : " + token);
         System.out.println("refreshToken inside OAuth2Controller after login : " + refreshToken);
