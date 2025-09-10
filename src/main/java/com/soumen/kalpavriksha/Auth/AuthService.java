@@ -315,6 +315,20 @@ public class AuthService
                     refreshTokenData.setExpiresAt(LocalDateTime.now().plusDays(15));
 
                     refreshTokenRepo.save(refreshTokenData);
+
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("refreshToken", refreshToken);
+                    data.put("token", token);
+                    data.put("id", userId);
+                    data.put("role", role);
+                    data.put("email", userEmail);
+                    data.put("name", user.getName());
+
+                    rawPassword = null;
+
+                    System.out.println("data in log in service : " + data);
+
+                    return Response.success("User logged in successfully", data);
                 }
 
 
