@@ -36,13 +36,11 @@ public class JwtFilter extends OncePerRequestFilter
         final String token;
         final String userId;
 
-        System.out.println("request.getRequestURI() : " + request.getRequestURI());
+        String requestURI = request.getRequestURI();
+        System.out.println("requestURI in jwt filter : " + requestURI);
 
-        if((request.getRequestURI().contains("/login")
-                || request.getRequestURI().contains("/register")
-                || request.getRequestURI().contains("/refresh")
-                || request.getRequestURI().contains("/logout-user"))
-                && (request.getMethod().equals("POST") || request.getMethod().equals("GET")))
+        // Skip filter for public endpoints
+        if (requestURI.startsWith("/api/v1/auth") || requestURI.startsWith("/api/v1/public"))
         {
             filterChain.doFilter(request, response);
             return;

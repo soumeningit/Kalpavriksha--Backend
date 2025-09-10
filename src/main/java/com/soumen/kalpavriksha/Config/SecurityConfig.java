@@ -34,7 +34,7 @@ public class SecurityConfig
     {
         http.csrf(customizer -> customizer.disable());
         http.authorizeHttpRequests(requests -> requests
-//                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/", "/home", "/favicon.ico","/home/**").permitAll()
                 .requestMatchers("/ws/**").permitAll()
                 .requestMatchers("/api/v1/public/**").permitAll()
