@@ -155,7 +155,7 @@ public class AuthController
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("Lax")
+                .sameSite("None")
                 .path("/api/v1/auth")
                 .maxAge(Duration.ofDays(7))
                 .build();
