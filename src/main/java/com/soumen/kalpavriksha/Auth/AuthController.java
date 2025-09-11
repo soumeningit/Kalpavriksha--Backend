@@ -155,8 +155,8 @@ public class AuthController
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("None")
-                .path("/")
+                .sameSite("Lax")
+                .path("/api/v1/auth")
                 .maxAge(Duration.ofDays(7))
                 .build();
 
@@ -266,55 +266,56 @@ public class AuthController
         return new ResponseEntity<>(Response.success("Password updated successfully"), HttpStatus.OK);
     }
 
-//    @PostMapping("/refresh-token/refresh")
-//    public ResponseEntity<?> refreshToken(@CookieValue(value = "refreshToken", required = false) String refreshToken)
-//    {
-//        System.out.println("inside refresh token controller");
-//        System.out.println("refreshToken : " + refreshToken);
-//
-//        long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 15;
-//
-//        if(refreshToken == null)
-//        {
-//            return new ResponseEntity<>(Response.error("Refresh Token is not present"), HttpStatus.NOT_FOUND);
-//        }
-//
-//        Optional<RefreshToken> token = repository.findByToken(refreshToken);
-//
-//        if(token.isEmpty())
-//        {
-//            return new ResponseEntity<>(Response.error("Refresh Token is not present"), HttpStatus.NOT_FOUND);
-//        }
-//
-//        RefreshToken tokenEntity = token.get();
-//
-//        if(tokenEntity.getExpiresAt().isBefore(LocalDateTime.now()))
-//        {
-//            return new ResponseEntity<>(Response.error("Refresh Token is expired"), HttpStatus.NOT_FOUND);
-//        }
-//
-//        User user = tokenEntity.getUser();
-//
-//        System.out.println("user : " + user);
-//
-//        Payload payload = new Payload();
-//        payload.setEmail(user.getEmail());
-//        payload.setUserId(Integer.toString(user.getId()));
-//        payload.setRole(user.getRole().toString());
-//
-//        String newAccessToken = jwtService.generateAccessToken(payload, REFRESH_TOKEN_EXPIRATION_TIME);
-//
-//        Map<String , Object> data = new HashMap<>();
-//        data.put("token", newAccessToken);
-//        data.put("id", user.getId());
-//        data.put("role", user.getRole().toString());
-//        data.put("email", user.getEmail());
-//        data.put("name", user.getName());
-//
-//        return new ResponseEntity<>(Response.success("Token refreshed successfully", data), HttpStatus.OK);
-//
-//    }
+    @PostMapping("/refresh-token/refresh")
+    public ResponseEntity<?> refreshToken(@CookieValue(value = "refreshToken", required = false) String refreshToken)
+    {
+        System.out.println("inside refresh token controller");
+        System.out.println("refreshToken : " + refreshToken);
 
+        long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 15;
+
+        if(refreshToken == null)
+        {
+            return new ResponseEntity<>(Response.error("Refresh Token is not present"), HttpStatus.NOT_FOUND);
+        }
+
+        Optional<RefreshToken> token = repository.findByToken(refreshToken);
+
+        if(token.isEmpty())
+        {
+            return new ResponseEntity<>(Response.error("Refresh Token is not present"), HttpStatus.NOT_FOUND);
+        }
+
+        RefreshToken tokenEntity = token.get();
+
+        if(tokenEntity.getExpiresAt().isBefore(LocalDateTime.now()))
+        {
+            return new ResponseEntity<>(Response.error("Refresh Token is expired"), HttpStatus.NOT_FOUND);
+        }
+
+        User user = tokenEntity.getUser();
+
+        System.out.println("user : " + user);
+
+        Payload payload = new Payload();
+        payload.setEmail(user.getEmail());
+        payload.setUserId(Integer.toString(user.getId()));
+        payload.setRole(user.getRole().toString());
+
+        String newAccessToken = jwtService.generateAccessToken(payload, REFRESH_TOKEN_EXPIRATION_TIME);
+
+        Map<String , Object> data = new HashMap<>();
+        data.put("token", newAccessToken);
+        data.put("id", user.getId());
+        data.put("role", user.getRole().toString());
+        data.put("email", user.getEmail());
+        data.put("name", user.getName());
+
+        return new ResponseEntity<>(Response.success("Token refreshed successfully", data), HttpStatus.OK);
+
+    }
+
+    /*
     @PostMapping("/refresh-token/refresh")
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response)
     {
@@ -371,13 +372,16 @@ public class AuthController
 
     }
 
-//    @GetMapping("/check-cookie")
-//    public String checkCookie(@CookieValue(value = "refreshToken", required = false) String refreshToken)
-//    {
-//        System.out.println("Cookie inside check cookie : " + refreshToken);
-//        return "Cookie: " + refreshToken;
-//    }
+     */
 
+    @GetMapping("/check-cookie")
+    public String checkCookie(@CookieValue(value = "refreshToken", required = false) String refreshToken)
+    {
+        System.out.println("Cookie inside check cookie : " + refreshToken);
+        return "Cookie: " + refreshToken;
+    }
+
+    /*
     @GetMapping("/check-cookie")
     public String checkCookie(HttpServletRequest request, HttpServletResponse respons)
     {
@@ -407,5 +411,7 @@ public class AuthController
 
         return "Cookie: " + refreshToken;
     }
+
+     */
 
 }
