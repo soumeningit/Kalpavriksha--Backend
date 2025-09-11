@@ -166,7 +166,7 @@ public class OAuth2Service
             payload.setRole(role);
             payload.setEmail(userEmail);
 
-            long EXPIRATION_TIME = 1000 * 60 * 2;
+            long EXPIRATION_TIME = 1000 * 60 * 60 * 2;
             long REFRESH_TOKEN_EXPIRATION_TIME = 15 * 24 * 60 * 60 * 1000;
 
             String token = new JwtService().generateAccessToken(payload, EXPIRATION_TIME);

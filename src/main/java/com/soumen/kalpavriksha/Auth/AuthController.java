@@ -266,6 +266,7 @@ public class AuthController
         return new ResponseEntity<>(Response.success("Password updated successfully"), HttpStatus.OK);
     }
 
+    /*
     @PostMapping("/refresh-token/refresh")
     public ResponseEntity<?> refreshToken(@CookieValue(value = "refreshToken", required = false) String refreshToken)
     {
@@ -314,6 +315,7 @@ public class AuthController
         return new ResponseEntity<>(Response.success("Token refreshed successfully", data), HttpStatus.OK);
 
     }
+     */
 
     /*
     @PostMapping("/refresh-token/refresh")
@@ -374,12 +376,12 @@ public class AuthController
 
      */
 
-    @GetMapping("/check-cookie")
-    public String checkCookie(@CookieValue(value = "refreshToken", required = false) String refreshToken)
-    {
-        System.out.println("Cookie inside check cookie : " + refreshToken);
-        return "Cookie: " + refreshToken;
-    }
+//    @GetMapping("/check-cookie")
+//    public String checkCookie(@CookieValue(value = "refreshToken", required = false) String refreshToken)
+//    {
+//        System.out.println("Cookie inside check cookie : " + refreshToken);
+//        return "Cookie: " + refreshToken;
+//    }
 
     /*
     @GetMapping("/check-cookie")
